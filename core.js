@@ -1,6 +1,9 @@
-// LazySkip core — shared engine for Netflix & Prime content scripts.
-// Lives in the extension's isolated world; the `LazySkip` global is visible
-// to netflix.js / prime.js because they share this execution context.
+// LazySkip core — shared engine for the Netflix & Prime content scripts.
+// Runs in the extension's isolated world; the `LazySkip` global is shared
+// with netflix.js / prime.js because they execute in the same context.
+//
+// Privacy: LazySkip reads nothing about you and sends nothing anywhere.
+// The only storage used is your own on/off preferences (chrome.storage).
 
 const LZ_DEFAULTS = {
   nfIntro: true,
@@ -16,6 +19,7 @@ const LZ_DEFAULTS = {
 
 const LazySkip = {
   settings: { ...LZ_DEFAULTS },
+  accent: '#ffffff',
   _cooldown: new Map(),
   _toastTimer: null,
 
@@ -26,7 +30,7 @@ const LazySkip = {
     });
   },
 
-  // Returns true at most once per `ms` for a given key, so we never spam clicks.
+  // Returns true at most once per `ms` for a key, so clicks are never spammed.
   ready(key, ms = 4000) {
     const now = Date.now();
     if (now - (this._cooldown.get(key) || 0) < ms) return false;
@@ -41,8 +45,9 @@ const LazySkip = {
     return true;
   },
 
-  // Speed control that only ever touches playbackRate during a real ad, and
-  // restores 1x otherwise. No body-text scanning => no false positives.
+  // Only ever touches playbackRate during a genuine ad (detected by precise
+  // selectors), and restores 1x otherwise. No page-text scanning, so real
+  // content is never sped up by mistake.
   handleAds(video, isAd) {
     if (!video) return;
     if (!this.settings.speedAds) {
@@ -64,11 +69,12 @@ const LazySkip = {
       el = document.createElement('div');
       el.id = 'lazyskip-toast';
       el.innerHTML =
-        '<span class="ls-emoji">⚡</span>' +
+        '<span class="ls-dot"></span>' +
         '<span class="ls-msg"></span>' +
         '<span class="ls-sub">built with laziness</span>';
       (document.body || document.documentElement).appendChild(el);
     }
+    el.querySelector('.ls-dot').style.background = this.accent;
     el.querySelector('.ls-msg').textContent = text;
     el.classList.add('ls-show');
     clearTimeout(this._toastTimer);
@@ -92,7 +98,9 @@ const LazySkip = {
         transition: opacity .25s ease, transform .25s ease;
       }
       #lazyskip-toast.ls-show { opacity: 1; transform: translate(-50%, 0); }
-      #lazyskip-toast .ls-emoji { font-size: 15px; }
+      #lazyskip-toast .ls-dot {
+        width: 8px; height: 8px; border-radius: 50%; background: #fff;
+      }
       #lazyskip-toast .ls-sub {
         font-weight: 400; font-size: 10px; opacity: .55;
         padding-left: 9px; margin-left: 3px;
@@ -104,9 +112,9 @@ const LazySkip = {
     (document.head || document.documentElement).appendChild(style);
   },
 
-  // Run `fn(settings)` on a steady interval plus a debounced DOM-mutation
-  // trigger. The debounce (one run per animation frame) keeps us off the
-  // hot path on players that mutate constantly (this froze Prime before).
+  // Runs `fn(settings)` on a steady interval plus a debounced DOM-mutation
+  // trigger (one run per animation frame). The debounce keeps us off the hot
+  // path on players that mutate constantly — this is what froze Prime before.
   run(fn) {
     const tick = () => { try { fn(this.settings); } catch (_) { /* keep going */ } };
     let queued = false;

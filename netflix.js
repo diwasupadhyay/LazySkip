@@ -1,5 +1,7 @@
 // LazySkip — Netflix. Uses Netflix's stable data-uia hooks for precision.
 
+LazySkip.accent = '#E50914'; // Netflix red
+
 function nfAdPlaying() {
   // Strictly ad-only markers (ad-supported tier). Precise selectors only —
   // never scan page text, so the recap can't be mistaken for an ad.
