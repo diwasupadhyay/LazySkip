@@ -128,23 +128,26 @@ const LazySkip = {
     (document.head || document.documentElement).appendChild(style);
   },
 
-  // Runs `fn(settings)` on a steady interval plus a debounced DOM-mutation
-  // trigger (one run per animation frame). The debounce keeps us off the hot
-  // path on players that mutate constantly — this is what froze Prime before.
+  // Runs `fn(settings)` on a steady interval plus a throttled DOM-mutation
+  // trigger. Streaming players mutate constantly (progress bar, etc.), so the
+  // throttle caps work at ~4 ticks/sec instead of one per animation frame —
+  // responsive enough for skip buttons while staying off the hot path.
   run(fn) {
-    const tick = () => { try { fn(this.settings); } catch (_) { /* keep going */ } };
-    let queued = false;
-    const observer = new MutationObserver(() => {
-      if (queued) return;
-      queued = true;
-      requestAnimationFrame(() => { queued = false; tick(); });
-    });
+    const minGap = 250;
+    let lastRun = 0, pending = false;
+    const tick = () => { lastRun = Date.now(); try { fn(this.settings); } catch (_) { /* keep going */ } };
+    const schedule = () => {
+      if (pending) return;
+      pending = true;
+      setTimeout(() => { pending = false; tick(); }, Math.max(0, minGap - (Date.now() - lastRun)));
+    };
+    const observer = new MutationObserver(schedule);
     const startObserving = () => {
       observer.observe(document.documentElement, { childList: true, subtree: true });
     };
     if (document.documentElement) startObserving();
     else document.addEventListener('DOMContentLoaded', startObserving, { once: true });
-    setInterval(tick, 500);
+    setInterval(tick, 1000);
     tick();
   }
 };

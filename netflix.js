@@ -27,10 +27,8 @@ LazySkip.run((s) => {
   }
 
   if (s.nfNext) {
-    const b = document.querySelector(
-      '[data-uia="next-episode-seamless-button"], ' +
-      '[data-uia="next-episode-seamless-button-draining"]'
-    );
+    // Covers both "...seamless-button" and "...seamless-button-draining".
+    const b = document.querySelector('[data-uia*="next-episode-seamless-button"]');
     if (b) LazySkip.click(b, 'nf-next', 'Next episode', 9000);
   }
 

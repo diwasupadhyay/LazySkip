@@ -1,6 +1,7 @@
-// LazySkip — Amazon Prime Video. Prime's web player prefixes its controls with
-// `atvwebplayersdk-`. Amazon swaps these between <div> and <button> and shifts
-// the label between text / aria-label, so we match on class, text AND aria.
+// LazySkip — Amazon Prime Video. The skip/ad overlay still uses stable
+// `atvwebplayersdk-` classes, but newer player chrome (e.g. the "Next up" card)
+// ships obfuscated, build-specific classes — so for those we match on the
+// stable English label/aria text instead of the class name.
 
 LazySkip.accent = '#00A8E1'; // Prime blue
 
