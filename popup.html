@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  :root {
+    --bg: #16161c;
+    --card: #1e1e26;
+    --line: #2c2c38;
+    --text: #f2f2f5;
+    --muted: #9a9aa8;
+    --accent: #ffd54a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; width: 268px;
+    font: 13px/1.4 system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--text);
+  }
+  header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  header .logo { font-size: 18px; }
+  header h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: .2px; }
+  header .tag { margin-left: auto; font-size: 10px; color: var(--muted); }
+  .section { padding: 12px 16px 4px; }
+  .group {
+    font-size: 10px; font-weight: 700; letter-spacing: .8px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+  }
+  .row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 0; border-bottom: 1px solid var(--line);
+  }
+  .row:last-child { border-bottom: 0; }
+  .row label { cursor: pointer; }
+
+  /* toggle switch */
+  .sw { position: relative; width: 38px; height: 22px; flex: none; }
+  .sw input { opacity: 0; width: 0; height: 0; }
+  .sw .slider {
+    position: absolute; inset: 0; cursor: pointer;
+    background: var(--line); border-radius: 999px; transition: background .18s;
+  }
+  .sw .slider::before {
+    content: ""; position: absolute; height: 16px; width: 16px;
+    left: 3px; top: 3px; background: #fff; border-radius: 50%;
+    transition: transform .18s;
+  }
+  .sw input:checked + .slider { background: var(--accent); }
+  .sw input:checked + .slider::before { transform: translateX(16px); }
+
+  .speed { display: flex; align-items: center; gap: 10px; padding: 10px 0 6px; }
+  .speed input[type="range"] { flex: 1; accent-color: var(--accent); }
+  .speed .val {
+    min-width: 34px; text-align: center; font-weight: 700;
+    color: var(--accent); font-variant-numeric: tabular-nums;
+  }
+  footer {
+    text-align: center; padding: 12px 16px 14px;
+    font-size: 11px; color: var(--muted);
+    border-top: 1px solid var(--line);
+  }
+  footer b { color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+  <header>
+    <span class="logo">😴</span>
+    <h1>LazySkip</h1>
+    <span class="tag">v1.1</span>
+  </header>
+
+  <div class="section">
+    <div class="group">Netflix</div>
+    <div class="row"><label for="nfIntro">Skip intro</label>
+      <span class="sw"><input type="checkbox" id="nfIntro"><span class="slider"></span></span></div>
+    <div class="row"><label for="nfRecap">Skip recap</label>
+      <span class="sw"><input type="checkbox" id="nfRecap"><span class="slider"></span></span></div>
+    <div class="row"><label for="nfNext">Auto next episode</label>
+      <span class="sw"><input type="checkbox" id="nfNext"><span class="slider"></span></span></div>
+  </div>
+
+  <div class="section">
+    <div class="group">Prime Video</div>
+    <div class="row"><label for="pvIntro">Skip intro</label>
+      <span class="sw"><input type="checkbox" id="pvIntro"><span class="slider"></span></span></div>
+    <div class="row"><label for="pvRecap">Skip recap</label>
+      <span class="sw"><input type="checkbox" id="pvRecap"><span class="slider"></span></span></div>
+    <div class="row"><label for="pvNext">Auto next episode</label>
+      <span class="sw"><input type="checkbox" id="pvNext"><span class="slider"></span></span></div>
+  </div>
+
+  <div class="section">
+    <div class="group">Ads &amp; Extras</div>
+    <div class="row"><label for="speedAds">Speed up ads</label>
+      <span class="sw"><input type="checkbox" id="speedAds"><span class="slider"></span></span></div>
+    <div class="speed">
+      <span>Ad speed</span>
+      <input type="range" id="adSpeed" min="2" max="16" step="1">
+      <span class="val" id="adSpeedVal">8×</span>
+    </div>
+    <div class="row"><label for="showToast">Show on-screen toast</label>
+      <span class="sw"><input type="checkbox" id="showToast"><span class="slider"></span></span></div>
+  </div>
+
+  <footer>built with <b>laziness</b> 😴</footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
