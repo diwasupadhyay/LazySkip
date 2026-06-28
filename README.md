@@ -6,8 +6,9 @@
 
 **Sit back. It skips the boring parts for you.**
 
-Auto-skips intros & recaps, auto-plays the next episode, and speeds through ads
-on **Netflix** and **Amazon Prime Video** — so you never touch the remote.
+Auto-skips intros & recaps, auto-plays the next episode, and speeds up ads
+(it doesn't skip them — it fast-forwards through them) on **Netflix** and
+**Amazon Prime Video** — so you never touch the remote.
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-green) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-coming%20soon-lightgrey)
 

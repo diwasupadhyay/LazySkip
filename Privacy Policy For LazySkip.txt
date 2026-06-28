@@ -1,8 +1,8 @@
 LazySkip — Privacy Policy
 Last updated: June 2026
 
-LazySkip is a browser extension that automatically skips intros, recaps, and
-ads, and plays the next episode on Netflix and Amazon Prime Video.
+LazySkip is a browser extension that automatically skips intros and recaps,
+speeds up ads, and plays the next episode on Netflix and Amazon Prime Video.
 
 DATA WE COLLECT
 None. LazySkip does not collect, store, transmit, sell, or share any personal
