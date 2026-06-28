@@ -1,0 +1,31 @@
+LazySkip — Privacy Policy
+Last updated: June 2026
+
+LazySkip is a browser extension that automatically skips intros, recaps, and
+ads, and plays the next episode on Netflix and Amazon Prime Video.
+
+DATA WE COLLECT
+None. LazySkip does not collect, store, transmit, sell, or share any personal
+or usage data. There are no analytics, no trackers, and no external servers.
+
+WHAT THE EXTENSION STORES
+Your on/off preferences (which features are enabled and your chosen ad speed)
+are saved using Chrome's storage API. This data stays in your own browser /
+Google account sync and is never sent to us or anyone else.
+
+PERMISSIONS
+- "storage": used only to remember your settings.
+- Host access to netflix.com and primevideo.com: used only so the extension's
+  script can run on those video pages to click skip/next buttons. It does not
+  read, log, or transmit page content.
+
+REMOTE CODE
+LazySkip does not load or execute any remote or third-party code. All code is
+contained within the extension package and reviewed by the Chrome Web Store.
+
+CHANGES
+Any future changes to this policy will be published in this file in the
+project's public repository.
+
+CONTACT
+Questions or issues: https://github.com/diwasupadhyay/LazySkip/issues
