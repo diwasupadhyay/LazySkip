@@ -28,16 +28,13 @@ function pvFindSkip() {
 }
 
 function pvFindNext() {
-  const direct = document.querySelector(
-    '.atvwebplayersdk-nextupcard-button, [class*="nextupcard-button"], [class*="nextupcard"] button'
+  // ONLY the end-of-episode "Next up" card — never the persistent next-episode
+  // button that always sits in the control bar. Require it to be on-screen so
+  // we click it when the card actually appears, not while it's hidden.
+  const card = document.querySelector(
+    '.atvwebplayersdk-nextupcard-button, [class*="nextupcard-button"]'
   );
-  if (direct) return direct;
-  const nodes = document.querySelectorAll('button, [role="button"], a');
-  for (const el of nodes) {
-    const t = pvLabel(el);
-    if (t === 'next episode' || t.includes('next episode')) return el;
-  }
-  return null;
+  return LazySkip.isVisible(card) ? card : null;
 }
 
 function pvAdPlaying() {
@@ -49,8 +46,6 @@ function pvAdPlaying() {
 }
 
 LazySkip.run((s) => {
-  const video = document.querySelector('video');
-
   const skip = pvFindSkip();
   if (skip) {
     const t = pvLabel(skip);
@@ -71,5 +66,5 @@ LazySkip.run((s) => {
     if (next) LazySkip.click(next, 'pv-next', 'Next episode', 9000);
   }
 
-  LazySkip.handleAds(video, pvAdPlaying());
+  LazySkip.handleAds(pvAdPlaying());
 });

@@ -12,8 +12,6 @@ function nfAdPlaying() {
 }
 
 LazySkip.run((s) => {
-  const video = document.querySelector('video');
-
   if (s.nfIntro) {
     const b = document.querySelector(
       '[data-uia="player-skip-intro"], [data-uia*="skip-intro"]'
@@ -36,5 +34,5 @@ LazySkip.run((s) => {
     if (b) LazySkip.click(b, 'nf-next', 'Next episode', 9000);
   }
 
-  LazySkip.handleAds(video, nfAdPlaying());
+  LazySkip.handleAds(nfAdPlaying());
 });

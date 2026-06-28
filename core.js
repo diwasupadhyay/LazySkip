@@ -47,19 +47,27 @@ const LazySkip = {
 
   // Only ever touches playbackRate during a genuine ad (detected by precise
   // selectors), and restores 1x otherwise. No page-text scanning, so real
-  // content is never sped up by mistake.
-  handleAds(video, isAd) {
-    if (!video) return;
-    if (!this.settings.speedAds) {
-      if (video.playbackRate !== 1) video.playbackRate = 1;
-      return;
+  // content is never sped up by mistake. Applies to every <video> on the page
+  // because Prime plays ads in a separate element from the content video.
+  handleAds(isAd) {
+    const videos = document.querySelectorAll('video');
+    if (!videos.length) return;
+    const wantRate = (this.settings.speedAds && isAd)
+      ? Math.max(1, Math.min(16, Number(this.settings.adSpeed) || 8))
+      : 1;
+    for (const v of videos) {
+      if (v.playbackRate !== wantRate) {
+        try { v.playbackRate = wantRate; } catch (_) { /* ignore locked rate */ }
+      }
     }
-    const rate = Math.max(1, Math.min(16, Number(this.settings.adSpeed) || 8));
-    if (isAd) {
-      if (video.playbackRate !== rate) video.playbackRate = rate;
-    } else if (video.playbackRate !== 1) {
-      video.playbackRate = 1;
-    }
+  },
+
+  isVisible(el) {
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    if (r.width <= 0 || r.height <= 0) return false;
+    const st = getComputedStyle(el);
+    return st.visibility !== 'hidden' && st.display !== 'none' && Number(st.opacity) > 0;
   },
 
   toast(text) {
