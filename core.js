@@ -62,8 +62,16 @@ const LazySkip = {
     }
   },
 
+  // True only if the element is really shown — including the case where an
+  // ANCESTOR is faded out (opacity:0) or hidden. Players like Prime keep the
+  // "Next up" card in the DOM and toggle it via a parent's opacity, which a
+  // self-only style check misses. checkVisibility() walks the ancestor chain.
   isVisible(el) {
     if (!el) return false;
+    if (typeof el.checkVisibility === 'function' &&
+        !el.checkVisibility({ opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })) {
+      return false;
+    }
     const r = el.getBoundingClientRect();
     if (r.width <= 0 || r.height <= 0) return false;
     const st = getComputedStyle(el);

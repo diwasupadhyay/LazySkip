@@ -4,9 +4,21 @@
   "version": "1.0.0",
   "description": "Auto-skip intros and recaps, auto-play the next episode, and speed up ads on Netflix and Amazon Prime Video. Built with laziness.",
   "permissions": ["storage"],
+  "icons": {
+    "16": "icon128.png",
+    "32": "icon128.png",
+    "48": "icon128.png",
+    "128": "icon128.png"
+  },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "LazySkip"
+    "default_title": "LazySkip",
+    "default_icon": {
+      "16": "icon128.png",
+      "32": "icon128.png",
+      "48": "icon128.png",
+      "128": "icon128.png"
+    }
   },
   "content_scripts": [
     {

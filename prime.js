@@ -28,13 +28,25 @@ function pvFindSkip() {
 }
 
 function pvFindNext() {
-  // ONLY the end-of-episode "Next up" card — never the persistent next-episode
-  // button that always sits in the control bar. Require it to be on-screen so
-  // we click it when the card actually appears, not while it's hidden.
-  const card = document.querySelector(
+  // Prime's player uses obfuscated, build-specific class names, so we match the
+  // card's STABLE English label instead. The auto-advance card renders a button
+  // reading "Next up in N" (a countdown) near the end of an episode. We must
+  // NOT match the always-present control-bar button (aria-label "next title").
+  // Older builds expose .atvwebplayersdk-nextupcard-button — try that first.
+  const legacy = document.querySelector(
     '.atvwebplayersdk-nextupcard-button, [class*="nextupcard-button"]'
   );
-  return LazySkip.isVisible(card) ? card : null;
+  if (LazySkip.isVisible(legacy)) return legacy;
+
+  for (const el of document.querySelectorAll('button, [role="button"], a')) {
+    const aria = (el.getAttribute('aria-label') || '').toLowerCase();
+    if (aria.includes('next title')) continue; // persistent control button
+    const t = (el.textContent || '').trim().toLowerCase();
+    if (/next up\s*in\b/.test(t) || aria.includes('next up')) {
+      if (LazySkip.isVisible(el)) return el;
+    }
+  }
+  return null;
 }
 
 function pvAdPlaying() {
@@ -61,10 +73,14 @@ LazySkip.run((s) => {
     }
   }
 
-  if (s.pvNext) {
+  const adPlaying = pvAdPlaying();
+
+  // Auto-advance only when the "Next up" card is actually shown (and not on an
+  // ad). Card visibility is Prime's own "episode ending" signal.
+  if (s.pvNext && !adPlaying) {
     const next = pvFindNext();
     if (next) LazySkip.click(next, 'pv-next', 'Next episode', 9000);
   }
 
-  LazySkip.handleAds(pvAdPlaying());
+  LazySkip.handleAds(adPlaying);
 });
