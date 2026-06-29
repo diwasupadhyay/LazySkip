@@ -4,79 +4,64 @@
 <meta charset="utf-8">
 <style>
   :root {
-    --bg: #15151b;
-    --text: #f3f3f6;
-    --muted: #8c8c98;
-    --line: #2a2a34;
-    --netflix: #e50914;
-    --prime: #00a8e1;
-    --extra: #21c46b;
+    --bg: #15151b; --text: #f3f3f6; --muted: #8c8c98; --line: #2a2a34;
+    --netflix: #e50914; --prime: #00a8e1; --on: #21c46b;
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0; width: 252px;
+    margin: 0; width: 270px;
     font: 13px/1.35 system-ui, -apple-system, sans-serif;
     background: var(--bg); color: var(--text);
   }
-  header {
-    display: flex; align-items: baseline; gap: 7px;
-    padding: 13px 16px 11px; border-bottom: 1px solid var(--line);
-  }
+  header { display: flex; align-items: baseline; gap: 7px; padding: 13px 16px 11px; }
   header h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: .3px; }
   header .ver { margin-left: auto; font-size: 10px; color: var(--muted); }
 
-  .section { padding: 11px 16px 9px; border-bottom: 1px solid var(--line); }
-  .group {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 10px; font-weight: 700; letter-spacing: .8px;
-    text-transform: uppercase; color: var(--accent); margin-bottom: 3px;
+  /* tab buttons */
+  .tabs { display: flex; gap: 6px; padding: 4px 16px 0; }
+  .tab {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
+    padding: 8px 0; font: inherit; font-weight: 600; color: var(--muted);
+    background: #1d1d26; border: 1px solid var(--line); border-radius: 9px;
+    cursor: pointer; transition: color .15s, border-color .15s, background .15s;
   }
-  .group::before {
-    content: ""; width: 7px; height: 7px; border-radius: 50%;
-    background: var(--accent);
-  }
-  .netflix { --accent: var(--netflix); }
-  .prime   { --accent: var(--prime); }
-  .extra   { --accent: var(--extra); }
+  .tab svg { display: block; border-radius: 5px; }
+  .tab[aria-selected="true"] { color: #fff; }
+  .tab[data-tab="nf"][aria-selected="true"] { background: var(--netflix); border-color: var(--netflix); }
+  .tab[data-tab="pv"][aria-selected="true"] { background: var(--prime); border-color: var(--prime); }
 
-  .row {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 10px; padding: 7px 0; cursor: pointer; user-select: none;
-  }
+  .panel { padding: 6px 16px 4px; }
+  .panel[hidden] { display: none; }
+  .panel.netflix { --accent: var(--netflix); }
+  .panel.prime   { --accent: var(--prime); }
+  .hint { text-align: center; color: var(--muted); font-size: 12px; padding: 16px; }
+  .hint[hidden] { display: none; }
 
-  /* toggle switch — the whole .row is a <label>, so anywhere toggles it */
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0; cursor: pointer; user-select: none; }
+
+  .shared { padding: 8px 16px 4px; margin-top: 6px; border-top: 1px solid var(--line); --accent: var(--on); }
+  .speed { display: flex; align-items: center; gap: 10px; padding: 8px 0 4px; }
+  .speed span:first-child { color: var(--muted); }
+  .speed input[type="range"] { flex: 1; accent-color: var(--on); }
+  .speed .val { min-width: 30px; text-align: right; font-weight: 700; color: var(--on); font-variant-numeric: tabular-nums; }
+  .row.small span { font-size: 12px; color: var(--muted); }
+
   .sw { position: relative; width: 34px; height: 20px; flex: none; }
   .sw input { position: absolute; opacity: 0; margin: 0; width: 100%; height: 100%; cursor: pointer; }
-  .sw .slider {
-    position: absolute; inset: 0; pointer-events: none;
-    background: var(--line); border-radius: 999px; transition: background .18s;
-  }
-  .sw .slider::before {
-    content: ""; position: absolute; height: 14px; width: 14px;
-    left: 3px; top: 3px; background: #fff; border-radius: 50%;
-    transition: transform .18s;
-  }
+  .sw .slider { position: absolute; inset: 0; pointer-events: none; background: var(--line); border-radius: 999px; transition: background .18s; }
+  .sw .slider::before { content: ""; position: absolute; height: 14px; width: 14px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform .18s; }
   .sw input:checked + .slider { background: var(--accent); }
   .sw input:checked + .slider::before { transform: translateX(14px); }
 
-  .speed { display: flex; align-items: center; gap: 10px; padding: 9px 0 4px; }
-  .speed span:first-child { color: var(--muted); }
-  .speed input[type="range"] { flex: 1; accent-color: var(--accent); }
-  .speed .val {
-    min-width: 30px; text-align: right; font-weight: 700;
-    color: var(--accent); font-variant-numeric: tabular-nums;
-  }
-
-  footer { text-align: center; padding: 12px 16px 14px; }
-  footer .repo {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 11px; color: var(--muted); text-decoration: none;
-    padding: 5px 11px; border: 1px solid var(--line); border-radius: 999px;
-    transition: color .15s, border-color .15s;
-  }
+  footer { padding: 12px 16px 14px; border-top: 1px solid var(--line); margin-top: 8px; }
+  footer .stats { text-align: center; font-size: 11px; color: var(--text); }
+  footer .footrow { display: flex; align-items: center; justify-content: space-between; margin-top: 9px; }
+  footer .repo { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); text-decoration: none; padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; }
   footer .repo:hover { color: var(--text); border-color: var(--muted); }
   footer .repo svg { fill: currentColor; }
-  footer .made { margin-top: 9px; font-size: 11px; color: var(--muted); }
+  footer .reset { font: inherit; font-size: 11px; color: var(--muted); background: none; border: 0; cursor: pointer; padding: 4px 6px; }
+  footer .reset:hover { color: var(--text); }
+  footer .made { text-align: center; margin-top: 9px; font-size: 11px; color: var(--muted); }
   footer .made b { color: var(--text); font-weight: 600; }
 </style>
 </head>
@@ -86,44 +71,58 @@
     <span class="ver">v1.1</span>
   </header>
 
-  <div class="section netflix">
-    <div class="group">Netflix</div>
-    <label class="row"><span>Skip intro</span>
+  <div class="tabs">
+    <button class="tab" data-tab="nf" aria-selected="false">
+      <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#e50914"/><path d="M9 7l9 5-9 5z" fill="#fff"/></svg>
+      Netflix
+    </button>
+    <button class="tab" data-tab="pv" aria-selected="false">
+      <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#00a8e1"/><path d="M9 7l9 5-9 5z" fill="#fff"/></svg>
+      Prime
+    </button>
+  </div>
+
+  <div class="hint" id="hint">Pick a service above to see its options</div>
+
+  <div class="panel netflix" id="panel-nf" hidden>
+    <label class="row"><span>Skip Intro</span>
       <span class="sw"><input type="checkbox" id="nfIntro"><span class="slider"></span></span></label>
-    <label class="row"><span>Skip recap</span>
+    <label class="row"><span>Skip Recap</span>
       <span class="sw"><input type="checkbox" id="nfRecap"><span class="slider"></span></span></label>
-    <label class="row"><span>Auto next episode</span>
+    <label class="row"><span>Auto Next Episode</span>
       <span class="sw"><input type="checkbox" id="nfNext"><span class="slider"></span></span></label>
   </div>
 
-  <div class="section prime">
-    <div class="group">Prime Video</div>
-    <label class="row"><span>Skip intro</span>
+  <div class="panel prime" id="panel-pv" hidden>
+    <label class="row"><span>Skip Intro</span>
       <span class="sw"><input type="checkbox" id="pvIntro"><span class="slider"></span></span></label>
-    <label class="row"><span>Skip recap</span>
+    <label class="row"><span>Skip Recap</span>
       <span class="sw"><input type="checkbox" id="pvRecap"><span class="slider"></span></span></label>
-    <label class="row"><span>Auto next episode</span>
+    <label class="row"><span>Auto Next Episode</span>
       <span class="sw"><input type="checkbox" id="pvNext"><span class="slider"></span></span></label>
   </div>
 
-  <div class="section extra">
-    <div class="group">Ads &amp; Extras</div>
-    <label class="row"><span>Skip / speed up ads</span>
+  <div class="shared">
+    <label class="row"><span>Skip / Speed up ads</span>
       <span class="sw"><input type="checkbox" id="speedAds"><span class="slider"></span></span></label>
     <div class="speed">
-      <span>Ad speed</span>
+      <span>Ad Speed</span>
       <input type="range" id="adSpeed" min="2" max="16" step="1">
       <span class="val" id="adSpeedVal">8×</span>
     </div>
-    <label class="row"><span>On-screen toast</span>
+    <label class="row small"><span>On-screen toast</span>
       <span class="sw"><input type="checkbox" id="showToast"><span class="slider"></span></span></label>
   </div>
 
   <footer>
-    <a class="repo" href="https://github.com/diwasupadhyay/LazySkip" target="_blank" rel="noopener">
-      <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-      View on GitHub
-    </a>
+    <div class="stats" id="stats">Skipped 0 intros/recaps · Sped up 0 ads</div>
+    <div class="footrow">
+      <a class="repo" href="https://github.com/diwasupadhyay/LazySkip" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+      <button class="reset" id="reset">Reset stats</button>
+    </div>
     <div class="made">built with <b>laziness</b></div>
   </footer>
 

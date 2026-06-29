@@ -45,6 +45,13 @@ const LazySkip = {
     return true;
   },
 
+  bump(kind) {
+    const key = kind === 'ad' ? 'statsAds' : 'statsSkips';
+    chrome.storage.local.get({ [key]: 0 }, (o) => {
+      chrome.storage.local.set({ [key]: (o[key] || 0) + 1 });
+    });
+  },
+
   // Only ever touches playbackRate during a genuine ad (detected by precise
   // selectors), and restores 1x otherwise. No page-text scanning, so real
   // content is never sped up by mistake. Applies to every <video> on the page
@@ -52,7 +59,8 @@ const LazySkip = {
   handleAds(isAd) {
     const videos = document.querySelectorAll('video');
     if (!videos.length) return;
-    const wantRate = (this.settings.speedAds && isAd)
+    const speeding = this.settings.speedAds && isAd;
+    const wantRate = speeding
       ? Math.max(1, Math.min(16, Number(this.settings.adSpeed) || 8))
       : 1;
     for (const v of videos) {
@@ -60,6 +68,8 @@ const LazySkip = {
         try { v.playbackRate = wantRate; } catch (_) { /* ignore locked rate */ }
       }
     }
+    if (speeding && !this._wasAd) this.bump('ad');
+    this._wasAd = speeding;
   },
 
   // True only if the element is really shown — including the case where an
