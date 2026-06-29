@@ -16,14 +16,14 @@ LazySkip.run((s) => {
     const b = document.querySelector(
       '[data-uia="player-skip-intro"], [data-uia*="skip-intro"]'
     );
-    if (b && LazySkip.click(b, 'nf-intro', 'Skipped intro')) LazySkip.bump('skip');
+    if (b && LazySkip.click(b, 'nf-intro', 'Skipped intro')) LazySkip.bump('skip', 75);
   }
 
   if (s.nfRecap) {
     const b = document.querySelector(
       '[data-uia="player-skip-recap"], [data-uia*="skip-recap"], [data-uia*="skip-preplay"]'
     );
-    if (b && LazySkip.click(b, 'nf-recap', 'Skipped recap')) LazySkip.bump('skip');
+    if (b && LazySkip.click(b, 'nf-recap', 'Skipped recap')) LazySkip.bump('skip', 75);
   }
 
   if (s.nfNext) {

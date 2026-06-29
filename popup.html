@@ -9,6 +9,8 @@
     --netflix: #e50914; --prime: #00a8e1; --accent: #25c281;
   }
   * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  html, body { overflow-x: hidden; }
   body {
     margin: 0; width: 286px;
     font: 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -16,7 +18,8 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  header { display: flex; align-items: center; padding: 15px 18px 13px; }
+  header { display: flex; align-items: center; padding: 14px 18px 12px; }
+  .logo { width: 24px; height: 24px; border-radius: 7px; margin-right: 9px; }
   .brand { font-size: 17px; font-weight: 800; letter-spacing: -.2px; }
   .brand .k { color: var(--accent); }
   .ver { margin-left: auto; font-size: 10px; font-weight: 600; color: var(--muted);
@@ -37,22 +40,23 @@
   .tab[data-tab="nf"][aria-selected="true"] { background: var(--netflix); }
   .tab[data-tab="pv"][aria-selected="true"] { background: var(--prime); }
 
-  .hint { text-align: center; color: var(--muted); font-size: 12px; padding: 22px 18px 18px; }
+  .hint { text-align: center; color: var(--muted); font-size: 12px; padding: 20px 18px 16px; }
   .hint[hidden] { display: none; }
 
-  .panel { padding: 10px 18px 4px; }
+  .panel { padding: 8px 18px 0; }
   .panel[hidden] { display: none; }
   .panel.netflix { --sw: var(--netflix); }
   .panel.prime   { --sw: var(--prime); }
   .shared { --sw: var(--accent); }
 
   .group {
-    margin: 12px 18px 0; padding: 6px; background: var(--card);
+    margin: 10px 18px 0; padding: 5px; background: var(--card);
     border: 1px solid var(--line); border-radius: 13px;
   }
+  .panel .group { margin: 0; }
   .glabel {
     font-size: 10px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase;
-    color: var(--muted); padding: 7px 10px 4px;
+    color: var(--muted); padding: 7px 10px 3px;
   }
 
   .row {
@@ -62,7 +66,7 @@
   }
   .row:hover { background: var(--hover); }
 
-  .speed { display: flex; align-items: center; gap: 11px; padding: 6px 10px 9px; }
+  .speed { display: flex; align-items: center; gap: 11px; padding: 5px 10px 8px; }
   .speed .cap { color: var(--muted); }
   .speed input[type="range"] { flex: 1; accent-color: var(--accent); }
   .speed .val { min-width: 32px; text-align: right; font-weight: 700; color: var(--accent);
@@ -80,16 +84,17 @@
   .sw input:checked + .slider::before { transform: translateX(15px); }
 
   /* stats */
-  .stats { display: flex; margin: 16px 18px 4px; background: var(--card);
+  .stats { display: flex; margin: 13px 18px 0; background: var(--card);
            border: 1px solid var(--line); border-radius: 13px; overflow: hidden; }
-  .stat { flex: 1; text-align: center; padding: 13px 6px; }
+  .stat { flex: 1; text-align: center; padding: 12px 4px; }
   .stat + .stat { border-left: 1px solid var(--line); }
-  .stat .num { font-size: 25px; font-weight: 800; letter-spacing: -.5px; line-height: 1;
+  .stat .num { font-size: 22px; font-weight: 800; letter-spacing: -.5px; line-height: 1;
                font-variant-numeric: tabular-nums; }
-  .stat .lbl { font-size: 10px; font-weight: 600; letter-spacing: .4px; text-transform: uppercase;
+  .stat .num .u { font-size: 13px; font-weight: 700; color: var(--muted); margin-left: 1px; }
+  .stat .lbl { font-size: 9.5px; font-weight: 600; letter-spacing: .4px; text-transform: uppercase;
                color: var(--muted); margin-top: 6px; }
 
-  footer { padding: 12px 18px 15px; }
+  footer { padding: 11px 18px 14px; }
   .footrow { display: flex; align-items: center; justify-content: space-between; }
   .repo { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted);
           text-decoration: none; padding: 5px 11px; border: 1px solid var(--line); border-radius: 999px;
@@ -99,7 +104,7 @@
   .reset { font: inherit; font-size: 11px; color: var(--muted); background: none; border: 0;
            cursor: pointer; padding: 5px 6px; transition: color .15s; }
   .reset:hover { color: var(--text); }
-  .made { text-align: center; margin-top: 11px; font-size: 11px; color: var(--muted); }
+  .made { text-align: center; margin-top: 10px; font-size: 11px; color: var(--muted); }
   .made b { color: var(--text); font-weight: 600; }
 
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -107,6 +112,7 @@
 </head>
 <body>
   <header>
+    <img class="logo" src="icons/icon128.png" alt="">
     <span class="brand">Lazy<span class="k">Skip</span></span>
     <span class="ver">v1.1</span>
   </header>
@@ -162,8 +168,9 @@
   </div>
 
   <div class="stats">
-    <div class="stat"><div class="num" id="statSkips">0</div><div class="lbl">intros &amp; recaps</div></div>
-    <div class="stat"><div class="num" id="statAds">0</div><div class="lbl">ads handled</div></div>
+    <div class="stat" title="Intros & recaps skipped"><div class="num" id="statSkips">0</div><div class="lbl">skips</div></div>
+    <div class="stat" title="Ads skipped or sped up"><div class="num" id="statAds">0</div><div class="lbl">ads</div></div>
+    <div class="stat" title="Estimated time saved"><div class="num"><span id="statMins">0</span><span class="u">m</span></div><div class="lbl">saved</div></div>
   </div>
 
   <footer>

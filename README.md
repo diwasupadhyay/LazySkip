@@ -12,7 +12,9 @@ never touch the remote.
 
 [![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Install-blue?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/lazyskip/ilaeamkehaknfolckfppekhiokfogjmj) ![License: MIT](https://img.shields.io/badge/License-MIT-green) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue)
 
-<img src="1-Final.png" width="640" alt="LazySkip popup" />
+<img src="SS-1.png" width="270" alt="LazySkip — choose a service" />
+&nbsp;
+<img src="SS-2.png" width="270" alt="LazySkip — toggles and stats" />
 
 </div>
 
@@ -58,6 +60,10 @@ obfuscated markup. No tracking, no network calls, no nonsense.
 Open source and PRs welcome! Streaming sites change their markup often — if a
 button stops being caught, open an [issue](https://github.com/diwasupadhyay/LazySkip/issues)
 with the element's HTML and it's usually a one-line selector fix.
+
+## 📝 Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ## 📄 License
 

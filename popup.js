@@ -10,6 +10,7 @@ const adSpeed = document.getElementById('adSpeed');
 const adSpeedVal = document.getElementById('adSpeedVal');
 const statSkips = document.getElementById('statSkips');
 const statAds = document.getElementById('statAds');
+const statMins = document.getElementById('statMins');
 
 chrome.storage.sync.get(DEFAULTS, (s) => {
   for (const k of checks) document.getElementById(k).checked = s[k];
@@ -42,16 +43,18 @@ function showTab(tab) {
 tabs.forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
 
 // stats
+const STAT_KEYS = { statsSkips: 0, statsAds: 0, statsSeconds: 0 };
 function renderStats(o) {
   statSkips.textContent = o.statsSkips || 0;
   statAds.textContent = o.statsAds || 0;
+  statMins.textContent = Math.round((o.statsSeconds || 0) / 60);
 }
-chrome.storage.local.get({ statsSkips: 0, statsAds: 0 }, renderStats);
+chrome.storage.local.get(STAT_KEYS, renderStats);
 chrome.storage.onChanged.addListener((ch, area) => {
-  if (area === 'local' && (ch.statsSkips || ch.statsAds)) {
-    chrome.storage.local.get({ statsSkips: 0, statsAds: 0 }, renderStats);
+  if (area === 'local' && (ch.statsSkips || ch.statsAds || ch.statsSeconds)) {
+    chrome.storage.local.get(STAT_KEYS, renderStats);
   }
 });
 document.getElementById('reset').addEventListener('click', () => {
-  chrome.storage.local.set({ statsSkips: 0, statsAds: 0 });
+  chrome.storage.local.set({ statsSkips: 0, statsAds: 0, statsSeconds: 0 });
 });

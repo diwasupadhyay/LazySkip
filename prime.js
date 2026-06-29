@@ -93,7 +93,7 @@ function pvSkipAds() {
     setTimeout(() => {
       try { selfAd.click(); } catch (_) {}
       if (LazySkip.settings.showToast) LazySkip.toast('Skipped ad');
-      LazySkip.bump('ad');
+      LazySkip.bump('ad', 15);
       pvAdLock = 0;
     }, 150);
     return;
@@ -113,7 +113,7 @@ function pvSkipAds() {
   pvAdLock = 1;
   try { video.currentTime += jump; } catch (_) {}
   if (LazySkip.settings.showToast) LazySkip.toast('Skipped ad');
-  LazySkip.bump('ad');
+  LazySkip.bump('ad', jump);
   setTimeout(() => { pvAdLock = 0; }, adTime > PV_MAX_JUMP ? 3000 : 1000);
 }
 
@@ -127,12 +127,12 @@ LazySkip.run((s) => {
     const isRecap = t.includes('recap') || t.includes('flashback');
     const isIntro = t.includes('intro');
     if (isRecap && s.pvRecap) {
-      if (LazySkip.click(skip, 'pv-skip', 'Skipped recap')) LazySkip.bump('skip');
+      if (LazySkip.click(skip, 'pv-skip', 'Skipped recap')) LazySkip.bump('skip', 75);
     } else if (isIntro && s.pvIntro) {
-      if (LazySkip.click(skip, 'pv-skip', 'Skipped intro')) LazySkip.bump('skip');
+      if (LazySkip.click(skip, 'pv-skip', 'Skipped intro')) LazySkip.bump('skip', 75);
     } else if (!isRecap && !isIntro && (s.pvIntro || s.pvRecap)) {
       // Generic "Skip" with no label hint — honor it if either skip is on.
-      if (LazySkip.click(skip, 'pv-skip', 'Skipped')) LazySkip.bump('skip');
+      if (LazySkip.click(skip, 'pv-skip', 'Skipped')) LazySkip.bump('skip', 75);
     }
   }
 

@@ -45,10 +45,13 @@ const LazySkip = {
     return true;
   },
 
-  bump(kind) {
+  bump(kind, secs) {
     const key = kind === 'ad' ? 'statsAds' : 'statsSkips';
-    chrome.storage.local.get({ [key]: 0 }, (o) => {
-      chrome.storage.local.set({ [key]: (o[key] || 0) + 1 });
+    chrome.storage.local.get({ [key]: 0, statsSeconds: 0 }, (o) => {
+      chrome.storage.local.set({
+        [key]: (o[key] || 0) + 1,
+        statsSeconds: (o.statsSeconds || 0) + (secs || 0)
+      });
     });
   },
 
@@ -68,7 +71,7 @@ const LazySkip = {
         try { v.playbackRate = wantRate; } catch (_) { /* ignore locked rate */ }
       }
     }
-    if (speeding && !this._wasAd) this.bump('ad');
+    if (speeding && !this._wasAd) this.bump('ad', 30);
     this._wasAd = speeding;
   },
 
@@ -98,8 +101,12 @@ const LazySkip = {
         '<span class="ls-dot"></span>' +
         '<span class="ls-msg"></span>' +
         '<span class="ls-sub">built with laziness</span>';
-      (document.body || document.documentElement).appendChild(el);
     }
+    // In fullscreen, only the fullscreen element's subtree is visible, so the
+    // toast must live inside it (the <video> can't hold children, use its parent).
+    let host = document.fullscreenElement || document.body || document.documentElement;
+    if (host.tagName === 'VIDEO') host = host.parentElement || document.body;
+    if (el.parentNode !== host) host.appendChild(el);
     el.querySelector('.ls-dot').style.background = this.accent;
     el.querySelector('.ls-msg').textContent = text;
     el.classList.add('ls-show');
