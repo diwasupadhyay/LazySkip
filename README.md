@@ -6,11 +6,11 @@
 
 **Sit back. It skips the boring parts for you.**
 
-Auto-skips intros & recaps, auto-plays the next episode, and speeds up ads
-(it doesn't skip them — it fast-forwards through them) on **Netflix** and
-**Amazon Prime Video** — so you never touch the remote.
+Auto-skips intros & recaps, auto-plays the next episode, and gets you past ads
+— **skips** them on Prime Video, **fast-forwards** them on Netflix — so you
+never touch the remote.
 
-![License: MIT](https://img.shields.io/badge/License-MIT-green) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue) ![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-coming%20soon-lightgrey)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Install-blue?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/lazyskip/ilaeamkehaknfolckfppekhiokfogjmj) ![License: MIT](https://img.shields.io/badge/License-MIT-green) ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue)
 
 <img src="1-Final.png" width="640" alt="LazySkip popup" />
 
@@ -25,7 +25,10 @@ Auto-skips intros & recaps, auto-plays the next episode, and speeds up ads
 | Skip intro | ✅ | ✅ |
 | Skip recap | ✅ | ✅ |
 | Auto next episode | ✅ | ✅ |
-| Speed up ads (up to 16×) | ✅ | ✅ |
+| Get past ads | ⏩ fast-forward (up to 16×) | ⏭️ skips them |
+
+> On **Prime Video**, LazySkip seeks past ads using Prime's own countdown.
+> On **Netflix** (ad tier), it fast-forwards through them at your chosen speed.
 
 - 🎛️ Toggle anything from the popup, tune the ad speed with a slider.
 - 🔴🔵 Brand-coloured UI + a tiny on-screen toast when it acts.
@@ -33,14 +36,16 @@ Auto-skips intros & recaps, auto-plays the next episode, and speeds up ads
 
 ## 🚀 Install
 
-**Chrome Web Store** — *coming soon.* ⏳
+**[➜ Install from the Chrome Web Store](https://chromewebstore.google.com/detail/lazyskip/ilaeamkehaknfolckfppekhiokfogjmj)** — one click, auto-updates.
 
-**Meanwhile, load it unpacked:**
+<details>
+<summary>Or load it unpacked (for development)</summary>
 
 1. Download or clone this repo.
 2. Open `chrome://extensions` and turn on **Developer mode**.
 3. Click **Load unpacked** and select the `LazySkip` folder.
 4. Open Netflix or Prime Video and relax.
+</details>
 
 ## 🛠️ How it works
 

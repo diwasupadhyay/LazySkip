@@ -58,6 +58,66 @@ function pvAdPlaying() {
   );
 }
 
+// --- Ad skipping ------------------------------------------------------------
+// Prime ads ignore playbackRate (the ad plays in a separate element that just
+// buffers when sped up — the "stuck loading" you saw). Instead we SEEK past the
+// ad: Prime renders the remaining ad time in its own timer, so we jump
+// video.currentTime forward by that amount. Self-promo ads expose a real skip
+// button, so those we simply click.
+
+const PV_VIDEO = '.dv-player-fullscreen video';
+const PV_AD_TIMER = '.dv-player-fullscreen .atvwebplayersdk-ad-timer-remaining-time';
+const PV_SELF_AD_BTN = '.fu4rd6c.f1cw2swo'; // Prime's own "skip self-ad" button
+const PV_MAX_JUMP = 90; // a single seek larger than ~90s crashes the player
+let pvAdLock = 0;       // 0 = free; >0 = recently seeked, wait it out
+
+// Parse "1:23" / "0:08" / "45" style remaining-time text into seconds.
+function pvParseAdTime(text) {
+  if (!text) return 0;
+  const sec = parseInt((/:(\d+)/.exec(text) || [])[1] || '', 10);
+  const min = parseInt((/(\d+)/.exec(text) || [])[1] || '', 10);
+  const total = (isNaN(sec) ? 0 : sec) + (isNaN(min) ? 0 : min * 60);
+  return isNaN(total) ? 0 : total;
+}
+
+function pvSkipAds() {
+  if (!LazySkip.settings.speedAds) return;
+  const video = document.querySelector(PV_VIDEO);
+  if (!video || video.paused || !(video.currentTime > 0)) return;
+
+  // 1) Self-promo ad — a real skip button exists; click it (slight delay so we
+  //    don't click before it's wired up, which causes infinite loading).
+  const selfAd = document.querySelector(PV_SELF_AD_BTN);
+  if (selfAd && LazySkip.isVisible(selfAd) && !pvAdLock) {
+    pvAdLock = 1;
+    setTimeout(() => {
+      try { selfAd.click(); } catch (_) {}
+      if (LazySkip.settings.showToast) LazySkip.toast('Skipped ad');
+      pvAdLock = 0;
+    }, 150);
+    return;
+  }
+
+  // 2) Regular ad — read Prime's remaining-time readout and seek past it.
+  const timer = document.querySelector(PV_AD_TIMER);
+  if (!timer || !LazySkip.isVisible(timer) || pvAdLock) return;
+  const adTime =
+    pvParseAdTime(timer.childNodes[0] && timer.childNodes[0].textContent) ||
+    pvParseAdTime(timer.childNodes[1] && timer.childNodes[1].textContent) ||
+    pvParseAdTime(timer.textContent);
+  if (adTime <= 1) return;
+
+  // Jump in chunks of <=90s; lock briefly so we don't seek again mid-buffer.
+  const jump = Math.min(adTime - 1, PV_MAX_JUMP);
+  pvAdLock = 1;
+  try { video.currentTime += jump; } catch (_) {}
+  if (LazySkip.settings.showToast) LazySkip.toast('Skipped ad');
+  setTimeout(() => { pvAdLock = 0; }, adTime > PV_MAX_JUMP ? 3000 : 1000);
+}
+
+// Tight 100ms loop — ad windows are short, so we need to catch them fast.
+setInterval(pvSkipAds, 100);
+
 LazySkip.run((s) => {
   const skip = pvFindSkip();
   if (skip) {
@@ -74,14 +134,11 @@ LazySkip.run((s) => {
     }
   }
 
-  const adPlaying = pvAdPlaying();
-
   // Auto-advance only when the "Next up" card is actually shown (and not on an
   // ad). Card visibility is Prime's own "episode ending" signal.
-  if (s.pvNext && !adPlaying) {
+  if (s.pvNext && !pvAdPlaying()) {
     const next = pvFindNext();
     if (next) LazySkip.click(next, 'pv-next', 'Next episode', 9000);
   }
-
-  LazySkip.handleAds(adPlaying);
+  // Ads are handled by the seek-based pvSkipAds() loop above, not here.
 });
