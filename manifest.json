@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "LazySkip",
   "version": "1.1.0",
-  "description": "Auto-skip intros and recaps, auto-play the next episode, and skip/fast-forward ads on Netflix and Amazon Prime Video. Built with laziness.",
+  "description": "Auto-skip intros & recaps, auto-play the next episode, and skip/speed up ads on Netflix & Prime Video. Built with laziness.",
   "permissions": ["storage"],
   "icons": {
     "16": "icons/icon16.png",

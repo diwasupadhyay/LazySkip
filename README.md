@@ -25,7 +25,7 @@ never touch the remote.
 | Skip intro | ✅ | ✅ |
 | Skip recap | ✅ | ✅ |
 | Auto next episode | ✅ | ✅ |
-| Get past ads | ⏩ fast-forward (up to 16×) | ⏭️ skips them |
+| Get past ads | ⏩ fast-forward (up to 16×) | ⏭️ skips/fast-forward (up to 16×) |
 
 > On **Prime Video**, LazySkip seeks past ads using Prime's own countdown.
 > On **Netflix** (ad tier), it fast-forwards through them at your chosen speed.
