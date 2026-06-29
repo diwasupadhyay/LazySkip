@@ -8,7 +8,8 @@ const checks = ['nfIntro', 'nfRecap', 'nfNext', 'pvIntro', 'pvRecap', 'pvNext', 
 
 const adSpeed = document.getElementById('adSpeed');
 const adSpeedVal = document.getElementById('adSpeedVal');
-const statsEl = document.getElementById('stats');
+const statSkips = document.getElementById('statSkips');
+const statAds = document.getElementById('statAds');
 
 chrome.storage.sync.get(DEFAULTS, (s) => {
   for (const k of checks) document.getElementById(k).checked = s[k];
@@ -42,7 +43,8 @@ tabs.forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
 
 // stats
 function renderStats(o) {
-  statsEl.textContent = `Skipped ${o.statsSkips || 0} intros/recaps · Sped up ${o.statsAds || 0} ads`;
+  statSkips.textContent = o.statsSkips || 0;
+  statAds.textContent = o.statsAds || 0;
 }
 chrome.storage.local.get({ statsSkips: 0, statsAds: 0 }, renderStats);
 chrome.storage.onChanged.addListener((ch, area) => {
